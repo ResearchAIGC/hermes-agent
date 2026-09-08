@@ -1,0 +1,49 @@
+HERMES AGENT
+ASCII ARCHITECTURE MAP
+
+                    +------------------+
+                    |  USER / DEVELOPER|
+                    +--------+---------+
+                             |
+          +------------------+------------------+
+          |                  |                  |
+     +----v----+        +----v----+        +----v----+
+     | CLI/TUI |        | DESKTOP |        | GATEWAY |
+     | hermes  |        | Electron|        | TG/Slack|
+     +----+----+        +----+----+        +----+----+
+          \                  |                  /
+           \                 |                 /
+            +----------------v----------------+
+            |         AGENT CORE              |
+            |  context -> model -> tool calls |
+            +----------------+----------------+
+                             |
+       +---------------------+---------------------+
+       |                     |                     |
+  +----v-----+         +-----v------+        +-----v-----+
+  |  MODEL   |         |   TOOLS    |        |  POLICY   |
+  | providers|         | registry   |        | config    |
+  | streaming|         | browser    |        | profiles  |
+  +----+-----+         | terminal   |        +-----+-----+
+       |               +-----+------+              |
+       |                     |                     |
+       +---------------------+---------------------+
+                             |
+       +---------------------+---------------------+
+       |                     |                     |
+  +----v-----+         +-----v------+        +-----v-----+
+  | MEMORY   |         | SKILLS /   |        | AUTOMATION|
+  | SessionDB|         | PLUGINS    |        | cron      |
+  | FTS5     |         | MCP        |        | subagents |
+  +----+-----+         +-----+------+        +-----+-----+
+       \                     |                     /
+        +--------------------v--------------------+
+        |       RUNTIME BACKENDS / SANDBOX        |
+        | Local · Docker · SSH · Modal · Daytona  |
+        +-----------------------------------------+
+
+READING GUIDE
+1. Top: where requests enter Hermes.
+2. Middle: the shared orchestration core.
+3. Bottom: capabilities, memory, and execution.
+4. Arrows show the main control flow, not every async event.

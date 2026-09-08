@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hermes Agent · Pixel Architecture</title>
+  <style>
+    :root {
+      --ink: #f7f2df;
+      --muted: #a8b6b0;
+      --bg: #071216;
+      --panel: #0c2024;
+      --panel-2: #102a2f;
+      --line: #31565a;
+      --cyan: #72e6d0;
+      --amber: #f3c969;
+      --violet: #c5a7ff;
+      --coral: #ff937b;
+      --blue: #8cc7ff;
+      --green: #a7dc8f;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        linear-gradient(rgba(114, 230, 208, .035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(114, 230, 208, .035) 1px, transparent 1px),
+        var(--bg);
+      background-size: 16px 16px;
+      font-family: "Courier New", "Noto Sans Mono", monospace;
+    }
+    .page { max-width: 1440px; margin: 0 auto; padding: 32px 24px 44px; }
+    header {
+      display: flex; justify-content: space-between; align-items: end; gap: 24px;
+      border-bottom: 4px solid var(--cyan); padding-bottom: 18px; margin-bottom: 22px;
+    }
+    h1 { margin: 0; font-size: clamp(1.35rem, 3vw, 2.25rem); letter-spacing: .08em; }
+    .kicker { color: var(--amber); font-size: .78rem; letter-spacing: .16em; margin: 0 0 10px; }
+    .subtitle { color: var(--muted); margin: 0; max-width: 620px; line-height: 1.6; font-size: .86rem; }
+    .stamp { color: var(--cyan); border: 2px solid var(--cyan); padding: 8px 10px; white-space: nowrap; font-size: .72rem; }
+    .frame {
+      background: rgba(12, 32, 36, .93); border: 2px solid var(--line); padding: 14px;
+      box-shadow: 8px 8px 0 rgba(0, 0, 0, .32);
+    }
+    svg { display: block; width: 100%; height: auto; min-width: 920px; }
+    .scroll { overflow-x: auto; }
+    .notes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 18px; }
+    .card {
+      min-height: 132px; padding: 14px 16px; background: var(--panel);
+      border: 2px solid var(--line); box-shadow: 4px 4px 0 rgba(0, 0, 0, .28);
+    }
+    .card h2 { margin: 0 0 10px; font-size: .86rem; color: var(--amber); }
+    .card p, .card li { color: var(--muted); font-size: .74rem; line-height: 1.6; }
+    .card p { margin: 0; }
+    .card ul { padding-left: 18px; margin: 0; }
+    footer { color: #6f8782; font-size: .7rem; line-height: 1.6; margin-top: 18px; }
+    @media (max-width: 760px) {
+      .page { padding: 22px 14px 32px; }
+      header { display: block; }
+      .stamp { display: inline-block; margin-top: 14px; }
+      .notes { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header>
+      <div>
+        <p class="kicker">HERMES AGENT / SYSTEM MAP 01</p>
+        <h1>Hermes Agent 智能体架构图</h1>
+        <p class="subtitle">同一套 Agent Core，承载 CLI、TUI、桌面端与多平台 Gateway；</p>
+        <p class="subtitle">能力在边缘扩展，核心保持窄而稳定。</p>
+      </div>
+      <div class="stamp">吾路 AI Agent 手术刀 · 2026-09</div>
+    </header>
+
+    <section class="frame scroll" aria-label="Hermes Agent architecture diagram">
+      <svg viewBox="0 0 1280 820" role="img" aria-labelledby="diagram-title diagram-desc">
+        <title id="diagram-title">Hermes Agent architecture</title>
+        <desc id="diagram-desc">Users connect through CLI, TUI, Electron desktop, or messaging platforms. These surfaces reach a shared agent core, which orchestrates models, tools, memory, skills, scheduling, and execution environments.</desc>
+        <defs>
+          <pattern id="microgrid" width="16" height="16" patternUnits="userSpaceOnUse">
+            <path d="M16 0H0V16" fill="none" stroke="#31565a" stroke-width="1" opacity=".25"/>
+          </pattern>
+          <marker id="arrow-cyan" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+            <path d="M0 0L10 5L0 10Z" fill="#72e6d0"/>
+          </marker>
+          <marker id="arrow-amber" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+            <path d="M0 0L10 5L0 10Z" fill="#f3c969"/>
+          </marker>
+          <filter id="pixel-shadow" x="-20%" y="-20%" width="150%" height="150%">
+            <feDropShadow dx="5" dy="5" stdDeviation="0" flood-color="#020708" flood-opacity=".7"/>
+          </filter>
+        </defs>
+
+        <rect width="1280" height="820" fill="url(#microgrid)"/>
+        <text x="32" y="34" fill="#72e6d0" font-size="13" letter-spacing="2">SURFACES / INPUT</text>
+        <text x="32" y="292" fill="#f3c969" font-size="13" letter-spacing="2">CORE / ORCHESTRATION</text>
+        <text x="32" y="570" fill="#c5a7ff" font-size="13" letter-spacing="2">CAPABILITIES / STATE / RUNTIME</text>
+
+        <!-- pixel-style horizontal rails -->
+        <path d="M32 52H1248M32 310H1248M32 588H1248" stroke="#31565a" stroke-width="2" stroke-dasharray="2 8"/>
+
+        <!-- Input surfaces -->
+        <g filter="url(#pixel-shadow)">
+          <g transform="translate(52 78)">
+            <rect width="245" height="142" fill="#102a2f" stroke="#72e6d0" stroke-width="3"/>
+            <path d="M0 16H16V0M229 0V16H245M0 126H16V142M229 142V126H245" fill="none" stroke="#72e6d0" stroke-width="5"/>
+            <text x="18" y="30" fill="#72e6d0" font-size="16" font-weight="bold">CLI / TUI</text>
+            <text x="18" y="58" fill="#f7f2df" font-size="13">hermes</text>
+            <text x="18" y="82" fill="#a8b6b0" font-size="11">对话 · slash commands · 流式输出</text>
+            <text x="18" y="108" fill="#a8b6b0" font-size="11">ui-tui / tui_gateway</text>
+          </g>
+          <g transform="translate(322 78)">
+            <rect width="245" height="142" fill="#102a2f" stroke="#72e6d0" stroke-width="3"/>
+            <path d="M0 16H16V0M229 0V16H245M0 126H16V142M229 142V126H245" fill="none" stroke="#72e6d0" stroke-width="5"/>
+            <text x="18" y="30" fill="#72e6d0" font-size="16" font-weight="bold">DESKTOP</text>
+            <text x="18" y="58" fill="#f7f2df" font-size="13">Electron app</text>
+            <text x="18" y="82" fill="#a8b6b0" font-size="11">dashboard · projects · bot mode</text>
+            <text x="18" y="108" fill="#a8b6b0" font-size="11">apps/desktop + web</text>
+          </g>
+          <g transform="translate(592 78)">
+            <rect width="310" height="142" fill="#102a2f" stroke="#72e6d0" stroke-width="3"/>
+            <path d="M0 16H16V0M294 0V16H310M0 126H16V142M294 142V126H310" fill="none" stroke="#72e6d0" stroke-width="5"/>
+            <text x="18" y="30" fill="#72e6d0" font-size="16" font-weight="bold">MESSAGING GATEWAY</text>
+            <text x="18" y="58" fill="#f7f2df" font-size="13">Telegram · Discord · Slack · …</text>
+            <text x="18" y="82" fill="#a8b6b0" font-size="11">adapters · routing · delivery</text>
+            <text x="18" y="108" fill="#a8b6b0" font-size="11">gateway/ + platform adapters</text>
+          </g>
+          <g transform="translate(927 78)">
+            <rect width="300" height="142" fill="#102a2f" stroke="#72e6d0" stroke-width="3"/>
+            <path d="M0 16H16V0M284 0V16H300M0 126H16V142M284 142V126H300" fill="none" stroke="#72e6d0" stroke-width="5"/>
+            <text x="18" y="30" fill="#72e6d0" font-size="16" font-weight="bold">API / ACP</text>
+            <text x="18" y="58" fill="#f7f2df" font-size="13">programmatic clients</text>
+            <text x="18" y="82" fill="#a8b6b0" font-size="11">JSON-RPC · editor integrations</text>
+            <text x="18" y="108" fill="#a8b6b0" font-size="11">acp_adapter / batch_runner</text>
+          </g>
+        </g>
+
+        <!-- arrows to core -->
+        <path d="M174 220V272M445 220V272M747 220V272M1077 220V272" stroke="#72e6d0" stroke-width="3" marker-end="url(#arrow-cyan)"/>
+
+        <!-- Core boundary -->
+        <rect x="52" y="328" width="1175" height="194" fill="#0c2024" stroke="#f3c969" stroke-width="3" stroke-dasharray="10 6"/>
+        <text x="72" y="354" fill="#f3c969" font-size="12" letter-spacing="1">NARROW WAIST · SHARED AGENT CORE</text>
+        <g filter="url(#pixel-shadow)">
+          <rect x="78" y="374" width="280" height="112" fill="#183338" stroke="#f3c969" stroke-width="3"/>
+          <text x="98" y="403" fill="#f3c969" font-size="17" font-weight="bold">TURN LOOP</text>
+          <text x="98" y="430" fill="#f7f2df" font-size="12">context → model → tool calls</text>
+          <text x="98" y="454" fill="#a8b6b0" font-size="11">strict message alternation</text>
+          <text x="98" y="474" fill="#a8b6b0" font-size="11">prompt cache · compression</text>
+
+          <rect x="393" y="374" width="280" height="112" fill="#183338" stroke="#f3c969" stroke-width="3"/>
+          <text x="413" y="403" fill="#f3c969" font-size="17" font-weight="bold">MODEL ROUTER</text>
+          <text x="413" y="430" fill="#f7f2df" font-size="12">provider / model selection</text>
+          <text x="413" y="454" fill="#a8b6b0" font-size="11">streaming responses</text>
+          <text x="413" y="474" fill="#a8b6b0" font-size="11">fallbacks · usage tracking</text>
+
+          <rect x="708" y="374" width="280" height="112" fill="#183338" stroke="#f3c969" stroke-width="3"/>
+          <text x="728" y="403" fill="#f3c969" font-size="17" font-weight="bold">TOOL ORCHESTRATOR</text>
+          <text x="728" y="430" fill="#f7f2df" font-size="12">registry → enabled toolsets</text>
+          <text x="728" y="454" fill="#a8b6b0" font-size="11">core tools · service gates</text>
+          <text x="728" y="474" fill="#a8b6b0" font-size="11">plugins · MCP · subagents</text>
+
+          <rect x="1023" y="374" width="184" height="112" fill="#183338" stroke="#f3c969" stroke-width="3"/>
+          <text x="1043" y="403" fill="#f3c969" font-size="17" font-weight="bold">POLICY</text>
+          <text x="1043" y="430" fill="#f7f2df" font-size="12">config · profiles</text>
+          <text x="1043" y="454" fill="#a8b6b0" font-size="11">cache-safe state</text>
+          <text x="1043" y="474" fill="#a8b6b0" font-size="11">permissions</text>
+        </g>
+        <path d="M358 430H393M673 430H708M988 430H1023" stroke="#f3c969" stroke-width="3" marker-end="url(#arrow-amber)"/>
+
+        <!-- Capability layer -->
+        <g filter="url(#pixel-shadow)">
+          <g transform="translate(52 620)">
+            <rect width="245" height="142" fill="#171a34" stroke="#c5a7ff" stroke-width="3"/>
+            <text x="18" y="30" fill="#c5a7ff" font-size="16" font-weight="bold">MEMORY + STATE</text>
+            <text x="18" y="61" fill="#f7f2df" font-size="12">SessionDB / FTS5</text>
+            <text x="18" y="84" fill="#a8b6b0" font-size="11">history · summaries · usage</text>
+            <text x="18" y="108" fill="#a8b6b0" font-size="11">persistent memory · profiles</text>
+          </g>
+          <g transform="translate(322 620)">
+            <rect width="245" height="142" fill="#171a34" stroke="#c5a7ff" stroke-width="3"/>
+            <text x="18" y="30" fill="#c5a7ff" font-size="16" font-weight="bold">SKILLS + PLUGINS</text>
+            <text x="18" y="61" fill="#f7f2df" font-size="12">curated workflows</text>
+            <text x="18" y="84" fill="#a8b6b0" font-size="11">context engines · providers</text>
+            <text x="18" y="108" fill="#a8b6b0" font-size="11">edge capability, not core bloat</text>
+          </g>
+          <g transform="translate(592 620)">
+            <rect width="310" height="142" fill="#171a34" stroke="#c5a7ff" stroke-width="3"/>
+            <text x="18" y="30" fill="#c5a7ff" font-size="16" font-weight="bold">EXECUTION TOOLS</text>
+            <text x="18" y="61" fill="#f7f2df" font-size="12">terminal · browser · files</text>
+            <text x="18" y="84" fill="#a8b6b0" font-size="11">computer use · media · search</text>
+            <text x="18" y="108" fill="#a8b6b0" font-size="11">tools/registry.py discovery</text>
+          </g>
+          <g transform="translate(927 620)">
+            <rect width="300" height="142" fill="#171a34" stroke="#c5a7ff" stroke-width="3"/>
+            <text x="18" y="30" fill="#c5a7ff" font-size="16" font-weight="bold">AUTOMATION</text>
+            <text x="18" y="61" fill="#f7f2df" font-size="12">cron · batch · delegation</text>
+            <text x="18" y="84" fill="#a8b6b0" font-size="11">parallel subagents</text>
+            <text x="18" y="108" fill="#a8b6b0" font-size="11">scheduled delivery to gateways</text>
+          </g>
+        </g>
+
+        <!-- arrows down -->
+        <path d="M200 522V612M445 522V612M747 522V612M1070 522V612" stroke="#c5a7ff" stroke-width="3" marker-end="url(#arrow-cyan)"/>
+
+        <!-- bottom annotations -->
+        <text x="52" y="798" fill="#72e6d0" font-size="11">RUNTIME BACKENDS: LOCAL · DOCKER · SSH · SINGULARITY · MODAL · DAYTONA · VERCEL SANDBOX</text>
+        <text x="1227" y="798" text-anchor="end" fill="#a8b6b0" font-size="10">Narrow core / expansive edges</text>
+      </svg>
+    </section>
+
+    <section class="notes">
+      <article class="card">
+        <h2>读图方式</h2>
+        <p>上层是入口，中间是每次请求都经过的核心编排，下层是可插拔能力与持久化状态。箭头表达主要控制流，不代表所有异步事件。</p>
+      </article>
+      <article class="card">
+        <h2>关键设计约束</h2>
+        <ul>
+          <li>会话级 prompt cache 保持稳定</li>
+          <li>核心工具面保持窄腰</li>
+          <li>能力优先放在 skill / plugin / MCP 边缘</li>
+        </ul>
+      </article>
+      <article class="card">
+        <h2>事实来源</h2>
+        <p>依据仓库根目录 <code>AGENTS.md</code>、<code>README.md</code> 与实际目录结构整理；这是逻辑架构图，不是部署拓扑或完整类图。</p>
+      </article>
+    </section>
+    <footer>Hermes Agent · architecture overview · 本图为项目结构的客观摘要，文件可直接在浏览器打开，无外部依赖。</footer>
+  </main>
+</body>
+</html>
